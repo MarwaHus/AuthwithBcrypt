@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -38,15 +37,18 @@ public class AuthUser {
         userRepository.save(siteUser);
         return new RedirectView ("login");
     }
-    @PostMapping("login")
-    public RedirectView login(String username ,String password) {
-        SiteUser userDataBase = userRepository.findByUsername(username);
-        if((userDataBase == null) || (!BCrypt.checkpw(password, userDataBase.getPassword())))
-        {
-            return new RedirectView("/login");
-        }
 
-        return new RedirectView("/");
-    }
+   @PostMapping("/login")
+   public RedirectView login(HttpServletRequest request, String username ,String password) {
+       SiteUser userDataBase = userRepository.findByUsername(username);
+       if((userDataBase == null) || (!BCrypt.checkpw(password, userDataBase.getPassword())))
+       {
+           return new RedirectView("/login");
+       }
+       HttpSession session= request.getSession();
+       session.setAttribute("username", username);
+       return new RedirectView("/post");
+
+   }
 
 }
