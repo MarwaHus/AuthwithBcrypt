@@ -114,7 +114,9 @@
         <button type="submit">Post</button>
     </fieldset>
 </form>
-
+<div th:each="post : ${posts}">
+    <p th:text="${post.textContent}"></p>
+</div>
 </body>
 
 </html>
